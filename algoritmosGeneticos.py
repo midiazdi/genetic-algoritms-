@@ -183,7 +183,7 @@ def run_genetic_algorithm(obj_fun, decoder,
 
 #FUNCIONES
 #######################################################################################
-def dejong_OF(y,x,w,v,u,t,s,r,q,p):
+def dejong_OF(x,w,t,u,r,q,y,v,s,p):
     #return sum(xi**2 for xi in x)
     return (0.17*x + 0.11*w)*y + (0.63*u + 0.12*t)*v + (0.68*r + 0.96*q)*s + 0.16*p
 
@@ -193,31 +193,7 @@ def dejong_OF(y,x,w,v,u,t,s,r,q,p):
 #######################################################################################
 
 
-def dejong_decoder(coding:str)->List[int]:
-    cadenas = [coding[i:i+7] for i in range(0, len(coding), 7)]
-    # use binary x and y as interval multiplier
-    numeros = []
-    for cadena in cadenas:
-        numeros.append(int(cadena, 2))
-    
-    
-    x = num_in_interval(0, 1, numeros[0], 2**7)
-    w = num_in_interval(0, 1, numeros[1], 2**7)
-    y = num_in_interval(0, 1, numeros[2], 2**7)
-    u = num_in_interval(0, 1, numeros[3], 2**7)
-    t = num_in_interval(0, 1, numeros[4], 2**7)
-    v = num_in_interval(0, 1, numeros[5], 2**7)
-    r = num_in_interval(0, 1, numeros[6], 2**7)
-    q = num_in_interval(0, 1, numeros[7], 2**7)
-    s = num_in_interval(0, 1, numeros[8], 2**7)
-    p = num_in_interval(0, 1, numeros[9], 2**7)
-
-    
-    return [x,w,y,u,t,v,r,q,s,p]
-
-
-
-def num_in_interval(lo:int, hi:int, mult:int, steps:int)->int:
+def internal_decoder(x:int,y:int,z:int)->int:
     """
     Helper function that takes simple parameters to deterministically
     yield a floating-point number in a given interval.
@@ -238,9 +214,32 @@ def num_in_interval(lo:int, hi:int, mult:int, steps:int)->int:
     :param steps: [int] the number of steps in the interval
     :returns: [float] a number between `lo` and `hi`
     """
-    step_size = (hi - lo)/steps
-    return lo + mult*step_size
+    return x/(y+z)
 
+def external_decoder(yy,y,v,s,p):
+    return yy/(y+v+s+p)
+
+def decoder(coding:str)->List[int]:
+    cadenas = [coding[i:i+7] for i in range(0, len(coding), 7)]
+    # use binary x and y as interval multiplier
+    numeros = []
+    for cadena in cadenas:
+        numeros.append(int(cadena, 2))
+    
+    x = internal_decoder(numeros[0],numeros[0],numeros[1])
+    w = internal_decoder(numeros[1],numeros[0],numeros[1])
+    t = internal_decoder(numeros[2],numeros[2],numeros[3])
+    u = internal_decoder(numeros[3],numeros[2],numeros[3])
+    r = internal_decoder(numeros[4],numeros[4],numeros[5])
+    q = internal_decoder(numeros[5],numeros[4],numeros[5])
+
+    y = external_decoder(numeros[6],numeros[6],numeros[7],numeros[8],numeros[9])
+    v = external_decoder(numeros[7],numeros[6],numeros[7],numeros[8],numeros[9])
+    s = external_decoder(numeros[8],numeros[6],numeros[7],numeros[8],numeros[9])
+    p = external_decoder(numeros[9],numeros[6],numeros[7],numeros[8],numeros[9])
+
+    
+    return [x,w,t,u,r,q,y,v,s,p]
 
 
 #GRAFICADORES
@@ -260,8 +259,6 @@ def plot_ga(obj_fun, decoder, ax=None, ga_opts=None, min_or_max=MIN,
     # Find the "global optimum" of all the chromosomes we looked at.
     # A better term for this chromosome is "best individual".
     all_chromosomes = {c for pop in populations for c in pop}
-    print('longitud de populations',len(populations))
-    print('longitud de all_chromosomes',len(all_chromosomes))
     optimizer = min if min_or_max == MIN else max
     global_optimum = optimizer(all_chromosomes, key=fitness)
     fittest_fitness = fitness(global_optimum)
@@ -269,7 +266,14 @@ def plot_ga(obj_fun, decoder, ax=None, ga_opts=None, min_or_max=MIN,
     # Print the optimum to the console
     print("Global optimum:", global_optimum)
     print("Fitness:", fittest_fitness)
-    print("Decoded:", decoder(global_optimum))
+    names = ['w1-tech','w2-tech','w3-eco','w1-eco','w1-env','w2-env','W1','W2','W3','W4']
+
+
+    decoded_op = decoder(global_optimum)
+    for valor, name in zip(decoded_op,names):
+        numero_formateado = f"{valor:.2f}"
+        print(name, ':', numero_formateado)
+
     
     # Start plotting
     # Define the data ranges
@@ -310,7 +314,7 @@ def plot_ga(obj_fun, decoder, ax=None, ga_opts=None, min_or_max=MIN,
 #LLAMADO
 #######################################################################################
 if __name__=='__main__':
-    decoder = dejong_decoder
+    decoder = decoder
     obj_fun = dejong_OF
     ga_options = dict(
         num_eras=200, population_size=25, chromosome_length=70, 
