@@ -184,8 +184,16 @@ def run_genetic_algorithm(obj_fun, decoder,
 #FUNCIONES
 #######################################################################################
 def dejong_OF(x,w,t,u,r,q,y,v,s,p):
-    #return sum(xi**2 for xi in x)
-    return (0.17*x + 0.11*w)*y + (0.63*u + 0.12*t)*v + (0.68*r + 0.96*q)*s + 0.16*p
+
+    #return (0.17*x + 0.11*w)*y + (0.63*u + 0.12*t)*v + (0.68*r + 0.96*q)*s + 0.16*p
+    #return (0.92*x + 0.34*w)*y + (0.89*u + 0.14*t)*v + (0.63*r + 0.93*q)*s + 0.54*p
+    #return (0.49*x + 0.10*w)*y + (1*u + 0.24*t)*v + (0.49*r + 0.87*q)*s + 1*p
+    return (0.94*x + 0.27*w)*y + (0*u + 0*t)*v + (0.39*r + 0.83*q)*s + 0*p
+    #return (0.46*x + 0.10*w)*y + (0.63*u + 0.01*t)*v + (0.68*r + 0.96*q)*s + 1*p
+    #return (0.93*x + 0.40*w)*y + (0.53*u + 0.06*t)*v + (0.63*r + 0.93*q)*s + 0.28*p
+    #return (0.70*x + 0.09*w)*y + (1*u + 0.19*t)*v + (0.50*r + 0.88*q)*s + 1*p
+    #return (0.94*x + 0.18*w)*y + (0.11*u + 0.21*t)*v + (0.47*r + 0.87*q)*s + 0.10*p
+
 
 
 
@@ -266,7 +274,7 @@ def plot_ga(obj_fun, decoder, ax=None, ga_opts=None, min_or_max=MIN,
     # Print the optimum to the console
     print("Global optimum:", global_optimum)
     print("Fitness:", fittest_fitness)
-    names = ['w1-tech','w2-tech','w3-eco','w1-eco','w1-env','w2-env','W1','W2','W3','W4']
+    names = ['w1-tech','w2-tech','w2-eco','w1-eco','w1-env','w2-env','W1','W2','W3','W4']
 
 
     decoded_op = decoder(global_optimum)
