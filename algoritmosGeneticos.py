@@ -184,11 +184,14 @@ def run_genetic_algorithm(obj_fun, decoder,
 #FUNCIONES
 #######################################################################################
 def dejong_OF(x,w,t,u,r,q,y,v,s,p):
-
+    #penalizacion si las variables toman determinados valores
+    if p <= 0.18 or v < 0.2:
+        return -1
+    else:
     #return (0.17*x + 0.11*w)*y + (0.63*u + 0.12*t)*v + (0.68*r + 0.96*q)*s + 0.16*p
     #return (0.92*x + 0.34*w)*y + (0.89*u + 0.14*t)*v + (0.63*r + 0.93*q)*s + 0.54*p
     #return (0.49*x + 0.10*w)*y + (1*u + 0.24*t)*v + (0.49*r + 0.87*q)*s + 1*p
-    return (0.94*x + 0.27*w)*y + (0*u + 0*t)*v + (0.39*r + 0.83*q)*s + 0*p
+        return (0.94*x + 0.27*w)*y + (0*u + 0*t)*v + (0.39*r + 0.83*q)*s + 0*p
     #return (0.46*x + 0.10*w)*y + (0.63*u + 0.01*t)*v + (0.68*r + 0.96*q)*s + 1*p
     #return (0.93*x + 0.40*w)*y + (0.53*u + 0.06*t)*v + (0.63*r + 0.93*q)*s + 0.28*p
     #return (0.70*x + 0.09*w)*y + (1*u + 0.19*t)*v + (0.50*r + 0.88*q)*s + 1*p
