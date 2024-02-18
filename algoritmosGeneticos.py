@@ -185,13 +185,13 @@ def run_genetic_algorithm(obj_fun, decoder,
 #######################################################################################
 def dejong_OF(x,w,t,u,r,q,y,v,s,p):
     #penalizacion si las variables toman determinados valores
-    if p <= 0.18 or v < 0.2:
-        return -1
-    else:
-    #return (0.17*x + 0.11*w)*y + (0.63*u + 0.12*t)*v + (0.68*r + 0.96*q)*s + 0.16*p
+    #if x <= 0.4 or p <= 0.2 or v <= 0.3:
+    #    return 0
+    #else:
+        #return (0.17*x + 0.11*w)*y + (0.63*u + 0.12*t)*v + (0.68*r + 0.96*q)*s + 0.16*p
     #return (0.92*x + 0.34*w)*y + (0.89*u + 0.14*t)*v + (0.63*r + 0.93*q)*s + 0.54*p
     #return (0.49*x + 0.10*w)*y + (1*u + 0.24*t)*v + (0.49*r + 0.87*q)*s + 1*p
-        return (0.94*x + 0.27*w)*y + (0*u + 0*t)*v + (0.39*r + 0.83*q)*s + 0*p
+    return (0.94*x + 0.27*w)*y + (0*u + 0*t)*v + (0.39*r + 0.83*q)*s + 0*p
     #return (0.46*x + 0.10*w)*y + (0.63*u + 0.01*t)*v + (0.68*r + 0.96*q)*s + 1*p
     #return (0.93*x + 0.40*w)*y + (0.53*u + 0.06*t)*v + (0.63*r + 0.93*q)*s + 0.28*p
     #return (0.70*x + 0.09*w)*y + (1*u + 0.19*t)*v + (0.50*r + 0.88*q)*s + 1*p
@@ -205,27 +205,11 @@ def dejong_OF(x,w,t,u,r,q,y,v,s,p):
 
 
 def internal_decoder(x:int,y:int,z:int)->int:
-    """
-    Helper function that takes simple parameters to deterministically
-    yield a floating-point number in a given interval.
+    if y+z == 0:
+        return x
+    else:
+        return x/(y+z)
     
-    ex. mult = 6, steps = 10
-    
-     |---+---+---+---+---+---|---+---+---+---|
-    lo                      mult             hi
-    
-    if low = -10 and hi = 10, then the result will be 
-      = -10 + 6*(20/10) 
-      = -10 + 12
-      = 2
-
-    :param lo: [number] low bound of interval
-    :param hi: [number] high bound of interval
-    :param mult: [number ≤ divisor] 
-    :param steps: [int] the number of steps in the interval
-    :returns: [float] a number between `lo` and `hi`
-    """
-    return x/(y+z)
 
 def external_decoder(yy,y,v,s,p):
     return yy/(y+v+s+p)
@@ -328,7 +312,7 @@ if __name__=='__main__':
     decoder = decoder
     obj_fun = dejong_OF
     ga_options = dict(
-        num_eras=200, population_size=25, chromosome_length=70, 
+        num_eras=200, population_size=50, chromosome_length=70, 
         crossover_probability=0.85, mutation_probability=0.01  
     )
     plot_ga(obj_fun, decoder, min_or_max=MAX,ga_opts=ga_options, title="Función Obejtivo (Maximización)")
